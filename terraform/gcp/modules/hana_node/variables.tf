@@ -114,11 +114,3 @@ variable "cluster_ssh_key" {
   description = "path for the private key needed by the cluster"
   type        = string
 }
-
-/*
-variable "on_destroy_dependencies" {
-  description = "Resources objects need in the on_destroy script (everything that allows ssh connection)"
-  type        = any
-  default     = []
-}
-*/

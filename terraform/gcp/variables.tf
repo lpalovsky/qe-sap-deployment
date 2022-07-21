@@ -196,30 +196,7 @@ variable "cluster_ssh_key" {
   description = "Path to a SSH private key used during the cluster creation. The key must be passwordless"
   type        = string
 }
-/*
-variable "provisioner" {
-  description = "Used provisioner option. Available options: salt. Let empty to not use any provisioner"
-  default     = "salt"
-}
 
-variable "provisioning_log_level" {
-  description = "Provisioning process log level. For salt: https://docs.saltstack.com/en/latest/ref/configuration/logging/index.html"
-  type        = string
-  default     = "error"
-}
-
-variable "background" {
-  description = "Run the provisioner execution in background if set to true finishing terraform execution"
-  type        = bool
-  default     = false
-}
-
-variable "provisioning_output_colored" {
-  description = "Print colored output of the provisioning execution"
-  type        = bool
-  default     = true
-}
-*/
 # Hana related variables
 
 variable "hana_name" {
