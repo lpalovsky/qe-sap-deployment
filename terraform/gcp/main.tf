@@ -76,8 +76,9 @@ module "common_variables" {
   reg_code                            = var.reg_code
   reg_email                           = var.reg_email
   reg_additional_modules              = var.reg_additional_modules
-  ha_sap_deployment_repo              = var.ha_sap_deployment_repo
-  additional_packages                 = var.additional_packages
+
+  #ha_sap_deployment_repo              = var.ha_sap_deployment_repo
+  #additional_packages                 = var.additional_packages
   public_key                          = var.public_key
   private_key                         = var.private_key
   authorized_keys                     = var.authorized_keys
@@ -87,7 +88,7 @@ module "common_variables" {
   bastion_private_key                 = var.bastion_private_key
   monitoring_enabled                  = var.monitoring_enabled
   monitoring_srv_ip                   = var.monitoring_enabled ? local.monitoring_srv_ip : ""
-  offline_mode                        = var.offline_mode
+  /*offline_mode                        = var.offline_mode
   hana_hwcct                          = var.hwcct
   hana_sid                            = var.hana_sid
   hana_instance_number                = var.hana_instance_number
@@ -111,12 +112,14 @@ module "common_variables" {
   hana_cluster_vip_mechanism          = var.hana_cluster_vip_mechanism
   hana_cluster_vip                    = local.hana_cluster_vip
   hana_cluster_vip_secondary          = var.hana_active_active ? local.hana_cluster_vip_secondary : ""
-  hana_ha_enabled                     = var.hana_ha_enabled
   hana_ignore_min_mem_check           = var.hana_ignore_min_mem_check
   hana_cluster_fencing_mechanism      = var.hana_cluster_fencing_mechanism
+  */
   hana_sbd_storage_type               = var.sbd_storage_type
-  hana_scale_out_enabled              = var.hana_scale_out_enabled
+  hana_ha_enabled                     = var.hana_ha_enabled
   hana_scale_out_shared_storage_type  = var.hana_scale_out_shared_storage_type
+  /*
+  hana_scale_out_enabled              = var.hana_scale_out_enabled
   hana_scale_out_addhosts             = var.hana_scale_out_addhosts
   hana_scale_out_standby_count        = var.hana_scale_out_standby_count
   netweaver_sid                       = var.netweaver_sid
@@ -138,6 +141,7 @@ module "common_variables" {
   netweaver_hana_sid                  = var.hana_sid
   netweaver_hana_instance_number      = var.hana_instance_number
   netweaver_hana_master_password      = var.hana_master_password
+  */
   netweaver_ha_enabled                = var.netweaver_ha_enabled
   netweaver_cluster_vip_mechanism     = var.netweaver_cluster_vip_mechanism
   netweaver_cluster_fencing_mechanism = var.netweaver_cluster_fencing_mechanism
@@ -186,10 +190,10 @@ module "netweaver_node" {
   common_variables          = module.common_variables.configuration
   name                      = var.netweaver_name
   network_domain            = var.netweaver_network_domain == "" ? var.network_domain : var.netweaver_network_domain
-  bastion_host              = module.bastion.public_ip
-  xscs_server_count         = local.netweaver_xscs_server_count
-  app_server_count          = var.netweaver_enabled ? var.netweaver_app_server_count : 0
-  machine_type              = var.netweaver_machine_type
+  #bastion_host              = module.bastion.public_ip
+  #xscs_server_count         = local.netweaver_xscs_server_count
+  #app_server_count          = var.netweaver_enabled ? var.netweaver_app_server_count : 0
+  #machine_type              = var.netweaver_machine_type
   compute_zones             = local.compute_zones
   network_name              = local.vpc_name
   network_subnet_name       = local.subnet_name
