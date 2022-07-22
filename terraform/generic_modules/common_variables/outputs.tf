@@ -25,8 +25,8 @@ output "configuration" {
     reg_code                    = var.reg_code
     reg_email                   = var.reg_email
     reg_additional_modules      = var.reg_additional_modules
-    ha_sap_deployment_repo      = var.ha_sap_deployment_repo
-    additional_packages         = var.additional_packages
+    #ha_sap_deployment_repo      = var.ha_sap_deployment_repo
+    #additional_packages         = var.additional_packages
     public_key                  = local.public_key
     private_key                 = local.private_key
     authorized_keys             = var.authorized_keys
@@ -34,14 +34,15 @@ output "configuration" {
     bastion_public_key          = local.bastion_public_key
     bastion_private_key         = local.bastion_private_key
     authorized_user             = var.authorized_user
-    provisioner                 = var.provisioner
-    provisioning_log_level      = var.provisioning_log_level
-    provisioning_output_colored = var.provisioning_output_colored
-    background                  = var.background
+    #provisioner                 = var.provisioner
+    #provisioning_log_level      = var.provisioning_log_level
+    #provisioning_output_colored = var.provisioning_output_colored
+    #background                  = var.background
     monitoring_enabled          = var.monitoring_enabled
     monitoring_srv_ip           = var.monitoring_srv_ip
-    offline_mode                = var.offline_mode
-    hana = {
+    #offline_mode                = var.offline_mode
+    hana                        = {
+      /*
       sid                            = var.hana_sid
       instance_number                = var.hana_instance_number
       cost_optimized_sid             = var.hana_cost_optimized_sid
@@ -64,20 +65,25 @@ output "configuration" {
       cluster_vip_mechanism          = var.hana_cluster_vip_mechanism
       cluster_vip                    = var.hana_cluster_vip
       cluster_vip_secondary          = var.hana_cluster_vip_secondary
-      ha_enabled                     = var.hana_ha_enabled
       ignore_min_mem_check           = var.hana_ignore_min_mem_check
       fencing_mechanism              = var.hana_cluster_fencing_mechanism
-      sbd_storage_type               = var.hana_sbd_storage_type
       scale_out_enabled              = var.hana_scale_out_enabled
-      scale_out_shared_storage_type  = var.hana_scale_out_shared_storage_type
       scale_out_addhosts             = var.hana_scale_out_addhosts
       scale_out_standby_count        = var.hana_scale_out_standby_count
+      scale_out_enabled              = var.hana_scale_out_enabled
+      */
+      ha_enabled                    = var.hana_ha_enabled
+      sbd_storage_type              = var.hana_sbd_storage_type
+      scale_out_shared_storage_type = var.hana_scale_out_shared_storage_type
+
     }
     netweaver = {
-      ha_enabled            = var.netweaver_ha_enabled
+      ha_enabled       = var.netweaver_ha_enabled
+      hana_sr_enabled  = var.hana_ha_enabled
+      sbd_storage_type = var.netweaver_sbd_storage_type
+      /*
       cluster_vip_mechanism = var.netweaver_cluster_vip_mechanism
       fencing_mechanism     = var.netweaver_cluster_fencing_mechanism
-      sbd_storage_type      = var.netweaver_sbd_storage_type
       sid                   = var.netweaver_sid
       ascs_instance_number  = var.netweaver_ascs_instance_number
       ers_instance_number   = var.netweaver_ers_instance_number
@@ -97,8 +103,8 @@ output "configuration" {
       hana_sid              = var.netweaver_hana_sid
       hana_instance_number  = var.netweaver_hana_instance_number
       hana_master_password  = var.netweaver_hana_master_password
-      hana_sr_enabled       = var.hana_ha_enabled
       shared_storage_type   = var.netweaver_shared_storage_type
+      */
     }
     monitoring = {
       hana_targets          = var.monitoring_hana_targets
@@ -112,11 +118,15 @@ output "configuration" {
       netweaver_targets_vip = var.monitoring_netweaver_targets_vip
     }
     drbd = {
-      cluster_vip           = var.drbd_cluster_vip
-      cluster_vip_mechanism = var.drbd_cluster_vip_mechanism
-      fencing_mechanism     = var.drbd_cluster_fencing_mechanism
-      sbd_storage_type      = var.drbd_sbd_storage_type
+      #cluster_vip           = var.drbd_cluster_vip
+      #cluster_vip_mechanism = var.drbd_cluster_vip_mechanism
+      fencing_mechanism = var.drbd_cluster_fencing_mechanism
+      sbd_storage_type  = var.drbd_sbd_storage_type
     }
+  }
+}
+
+    /*
     grains_output            = <<EOF
 provider: ${var.provider_type}
 reg_code: ${var.reg_code}
@@ -212,3 +222,4 @@ sbd_storage_type: ${var.drbd_sbd_storage_type}
 EOF
   }
 }
+*/

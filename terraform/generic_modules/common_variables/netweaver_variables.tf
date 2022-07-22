@@ -2,7 +2,7 @@ variable "netweaver_ha_enabled" {
   description = "Enable HA cluster in top of Netweaver ASCS and ERS instances"
   type        = bool
 }
-
+/*
 variable "netweaver_cluster_vip_mechanism" {
   description = "Mechanism used to manage the virtual IP address in the netweaver cluster."
   type        = string
@@ -12,12 +12,12 @@ variable "netweaver_cluster_fencing_mechanism" {
   description = "Choose the fencing mechanism for the cluster. Options: sbd, native"
   type        = string
 }
-
+*/
 variable "netweaver_sbd_storage_type" {
   description = "Choose the SBD storage type. Options: iscsi"
   type        = string
 }
-
+/*
 variable "netweaver_sid" {
   description = "System identifier of the Netweaver installation (e.g.: HA1 or PRD)"
   type        = string
@@ -177,3 +177,4 @@ variable "netweaver_shared_storage_type" {
     error_message = "Invalid Netweaver shared storage type. Options: drbd|anf|efs|nfs."
   }
 }
+*/

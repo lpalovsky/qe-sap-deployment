@@ -41,7 +41,7 @@ variable "reg_additional_modules" {
   type        = map(string)
   default     = {}
 }
-
+/*
 variable "ha_sap_deployment_repo" {
   description = "Repository url used to install development versions of HA/SAP deployment packages. If the SLE version is not present in the URL, it will be automatically detected"
   type        = string
@@ -53,7 +53,7 @@ variable "additional_packages" {
   type        = list(any)
   default     = []
 }
-
+*/
 variable "public_key" {
   description = "Content of a SSH public key or path to an already existing SSH public key. The key is only used to provision the machines and it is authorized for future accesses"
   type        = string
@@ -94,7 +94,7 @@ variable "bastion_private_key" {
   type        = string
   default     = ""
 }
-
+/*
 variable "provisioner" {
   description = "Used provisioner option. Available options: salt. Let empty to not use any provisioner"
   default     = "salt"
@@ -117,7 +117,7 @@ variable "background" {
   type        = bool
   default     = false
 }
-
+*/
 variable "monitoring_enabled" {
   description = "Enable centralized monitoring via Prometheus/Grafana/Loki"
   type        = bool
@@ -129,7 +129,7 @@ variable "monitoring_srv_ip" {
   type        = string
   default     = ""
 }
-
+/*
 # Tune deployment
 
 variable "offline_mode" {
@@ -143,3 +143,4 @@ variable "provisioning_output_colored" {
   type        = bool
   default     = true
 }
+*/

@@ -1,3 +1,4 @@
+/*
 variable "hana_sid" {
   description = "System identifier of the HANA system. It must be a 3 characters string (check the restrictions in the SAP documentation pages). Examples: prd, ha1"
   type        = string
@@ -152,12 +153,12 @@ variable "hana_hwcct" {
   type        = bool
   default     = false
 }
-
+*/
 variable "hana_ha_enabled" {
   description = "Enable HA cluster in top of HANA system replication"
   type        = bool
 }
-
+/*
 variable "hana_ignore_min_mem_check" {
   description = "Disable the min mem check imposed by hana allowing it to run with under 24 GiB"
   type        = bool
@@ -167,17 +168,17 @@ variable "hana_cluster_fencing_mechanism" {
   description = "Select the HANA cluster fencing mechanism. Options: sbd"
   type        = string
 }
-
+*/
 variable "hana_sbd_storage_type" {
   description = "Choose the SBD storage type. Options: iscsi, shared-disk(this option available in Libvirt only)"
   type        = string
 }
-
+/*
 variable "hana_scale_out_enabled" {
   description = "Enable HANA scale out deployment"
   type        = bool
 }
-
+*/
 variable "hana_scale_out_shared_storage_type" {
   description = "Storage type to use for HANA scale out deployment"
   type        = string
@@ -188,7 +189,7 @@ variable "hana_scale_out_shared_storage_type" {
     error_message = "Invalid HANA scale out storage type. Options: anf, nfs."
   }
 }
-
+/*
 variable "hana_scale_out_addhosts" {
   type        = map(any)
   description = <<EOF
@@ -200,3 +201,4 @@ variable "hana_scale_out_standby_count" {
   description = "Number of HANA scale-out standby nodes to be deployed per site"
   type        = number
 }
+*/
