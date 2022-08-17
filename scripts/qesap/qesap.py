@@ -7,12 +7,11 @@ import argparse
 import logging
 import sys
 import subprocess
-import re
 import yaml
 from yaml.parser import ParserError
 from yaml.scanner import ScannerError
 from string import Template
-
+from lib.config import yaml_to_tfvars, template_to_tfvars
 
 VERSION  = '0.1'
 
@@ -134,33 +133,35 @@ def validate_config(config):
 
 def validate_basedir(basedir, config):
     terraform_dir = os.path.join(basedir, 'terraform')
+    result = {
+        'terraform': terraform_dir,
+        'provider': None,
+        'tfvars': None,
+        'tfvars_template': None,
+        'hana_vars': None
+    }
+
     if not os.path.isdir(terraform_dir):
         log.error("Missing %s", terraform_dir)
         return False, None
-    terraform_provider_dir = os.path.join(terraform_dir, config['terraform']['provider'])
-    if not os.path.isdir(terraform_provider_dir):
-        log.error("Missing %s", terraform_provider_dir)
+    result['provider'] = os.path.join(terraform_dir, config['terraform']['provider'])
+    if not os.path.isdir(result['provider']):
+        log.error("Missing %s", result['terraform'])
         return False, None
-    tfvar_template_path = os.path.join(terraform_provider_dir,'terraform.tfvars.template')
-    if not os.path.isfile(tfvar_template_path):
-        log.error("Missing %s", tfvar_template_path)
-        return False, None
+    tfvar_template_path = os.path.join(result['provider'], 'terraform.tfvars.template')
+    # In case of template missing, it will be created from config.yaml
+    if os.path.isfile(tfvar_template_path):
+        result['tfvars_template'] = tfvar_template_path
 
     ansible_pl_vars_dir = os.path.join(basedir, 'ansible', 'playbooks', 'vars')
     if not os.path.isdir(ansible_pl_vars_dir):
         log.error("Missing %s", ansible_pl_vars_dir)
         return False, None
 
-    tfvar_path = os.path.join(terraform_provider_dir,'terraform.tfvars')
-    hana_vars = os.path.join(ansible_pl_vars_dir,'azure_hana_media.yaml')
+    result['tfvars'] = os.path.join(result['provider'],'terraform.tfvars')
+    result['hana_vars'] = os.path.join(ansible_pl_vars_dir,'azure_hana_media.yaml')
 
-    return True, {
-    'terraform':terraform_dir,
-    'provider':terraform_provider_dir,
-    'tfvars':tfvar_path,
-    'tfvars_template':tfvar_template_path,
-    'hana_vars':hana_vars
-    }
+    return True, result
 
 
 def cmd_configure(configure_data, base_project, dryrun):
@@ -189,29 +190,12 @@ def cmd_configure(configure_data, base_project, dryrun):
     tfvar_path = cfg_paths['tfvars']
     hana_vars = cfg_paths['hana_vars']
 
-    # Create tfvars file
-    with open(cfg_paths['tfvars_template'], 'r') as f:
-        tfvar_content = f.readlines()
-        log.debug("Template:%s", tfvar_content)
+    if cfg_paths['tfvars_template']:
+        tfvar_content = template_to_tfvars(cfg_paths['tfvars_template'], configure_data)
+    else:
+        tfvar_content = yaml_to_tfvars(configure_data, cfg_paths['tfvars'])
+    hanavar_content = {'hana_urls': configure_data['ansible']['hana_urls']}
 
-        if 'variables' in configure_data['terraform'].keys():
-            log.debug("Config has terraform variables")
-            for k,v in configure_data['terraform']['variables'].items():
-                key_replace = False
-                # Look for k in the template file content
-                for index, line in enumerate(tfvar_content):
-                    match = re.search(k+r'\s?=.*', line)
-                    if match:
-                        log.debug("Replace template %s with [%s = %s]", line, k, v)
-                        tfvar_content[index] = f"{k} = {v}\n"
-                        key_replace = True
-                # add the new key/value pair
-                if not key_replace:
-                    log.debug("[k:%s = v:%s] is not in the template, append it", k, v)
-                    tfvar_content.append(f"{k} = {v}\n")
-        log.debug("Result terraform.tfvars:\n%s", tfvar_content)
-    hanavar_content = {}
-    hanavar_content['hana_urls'] = configure_data['ansible']['hana_urls']
     log.debug("Result %s:\n%s", hana_vars, hanavar_content)
     if dryrun:
         print(f"Create {tfvar_path} with content {tfvar_content}")
