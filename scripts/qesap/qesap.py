@@ -193,7 +193,7 @@ def cmd_configure(configure_data, base_project, dryrun):
     if cfg_paths['tfvars_template']:
         tfvar_content = template_to_tfvars(cfg_paths['tfvars_template'], configure_data)
     else:
-        tfvar_content = yaml_to_tfvars(configure_data, cfg_paths['tfvars'])
+        tfvar_content = yaml_to_tfvars(configure_data)
     hanavar_content = {'hana_urls': configure_data['ansible']['hana_urls']}
 
     log.debug("Result %s:\n%s", hana_vars, hanavar_content)

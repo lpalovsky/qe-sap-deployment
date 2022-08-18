@@ -7,7 +7,7 @@ import re
 log = logging.getLogger('QESAPDEP')
 
 
-def yaml_to_tfvars(yaml_data, tfvars_file):
+def yaml_to_tfvars(yaml_data):
     """ Takes data structure collected from yaml config,
     converts into tfvars format and writes it into the final tfvars file
 
