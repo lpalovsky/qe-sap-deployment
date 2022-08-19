@@ -1,0 +1,123 @@
+#################################
+# qe-sap-deplyoment project configuration file
+# Includes all variables related to terraform and andsible deployment
+# Final ansible and terraform config files are generated from those variables
+# Not all variables are mandatory, for a missing variable a default value will be used
+#################################
+
+# TODO: not sure what is this variable for
+name: <deployment name>
+# Terraform related configuration - required (dict)
+terraform:
+  # Provider name - has to be the same name as terraform provider directory - required (str)
+  provider: <provider name>
+  # Terraform variables - variables used directly in generated tfvars file (dict)
+  variables:
+    ### GENERAL VARIABLES ###
+    # Region where to deploy the configuration (str)
+    az_region: <region>
+
+    # Unique name for the deployment - string is used as a part of naming convention
+    deplyoment_name: <deplyoment name>
+
+    # vnet address range in CIDR notation
+    # Only used if the vnet is created by terraform or the user doesn't have read permissions in this
+    # resource. To use the current vnet address range set the value to an empty string
+    # To define custom ranges
+    vnet_address_range: <addr range>
+    subnet_address_range: <addr range>
+
+    # Admin user for the created machines
+    admin_user: <admin user name>
+
+    # Default os_image. This value is not used if the specific values are set (e.g.: hana_os_image)
+    # Run the next command to get the possible options and use the 4th column value (version can be changed by `latest`)
+    # az vm image list --output table --publisher SUSE --all
+    # BYOS example with sles4sap 15 sp3 (this value is a pattern, it will select the latest version that matches this name)
+    os_image: <os image>
+
+    ##########################
+    # Bastion (jumpbox) machine variables
+    ##########################
+    # TODO: are we keeping this?
+    # Enable bastion usage. If this option is enabled, it will create a unique public ip address that is attached to the bastion machine.
+    # The rest of the machines won't have a public ip address and the SSH connection must be done through the bastion
+    bastion_enabled: <false (default) / true>
+
+    # Bastion machine os image. If it is not provided, the os_image variable data is used
+    # BYOS example
+    bastion_os_image: <bastion os image>
+
+    #########################
+    # HANA machines variables
+    #########################
+
+    # Hostname, without the domain part
+    hana_name: <hostname>
+
+    # VM size to use for the cluster nodes
+    hana_vm_size: <vm size>
+
+    # Number of nodes in the cluster
+    hana_count: <node count>
+
+    # Network options
+    hana_enable_accelerated_networking: <true/false(default)>
+
+    ### HANA STORAGE ###
+    # Type of fencing mechanism used
+    # native - does not require shared storage
+    # sbd - requires ISCSI server deployment for shared storage
+    hana_cluster_fencing_mechanism: <navive/sbd>
+
+    # local disk configuration - values below are just an example
+    hana_data_disks_configuration: # dict
+      # Each variable is a string which represents values for all disks delimited with ","
+      # example below shows 6 disk setup for each hana node
+      # TODO: this is not user friendly
+      disks_type:       "Premium_LRS,Premium_LRS,Premium_LRS,Premium_LRS,Premium_LRS,Premium_LRS"
+      disks_size:       "512,512,512,512,64,1024"
+      caching:          "ReadOnly,ReadOnly,ReadOnly,ReadOnly,ReadOnly,None"
+      writeaccelerator: "false,false,false,false,false,false"
+      luns:             "0,1,2#3#4#5"
+      names:            "datalog#shared#usrsap#backup"
+      lv_sizes:         "70,100#100#100#100"
+      paths:            "/hana/data,/hana/log#/hana/shared#/usr/sap#/hana/backup"
+    }
+
+    # SLES4SAP image information
+    # If custom uris are enabled public information will be omitted
+    # Custom sles4sap image
+    sles4sap_uri: <url path pointing to an image>
+
+    # Public OS images
+    # BYOS example
+    hana_os_image: "SUSE:sles-sap-15-sp3-byos:gen2:latest"
+
+    # Each host IP address in sequential order (list)
+    # If it's not set the addresses will be auto generated from the provided vnet address range
+    hana_ips: [<ip_addr node1>, <ip_addr node2>]
+
+    #######################
+    # SBD related variables
+    #######################
+
+    # In order to enable SBD, an ISCSI server is needed as right now is the only option
+    # All the clusters will use the same mechanism
+
+    # Hostname, without the domain part
+    iscsi_name: <iscsi node hostname>
+
+    # Custom iscsi server image, cannto be used together with 'iscsi_os_image'
+    iscsi_srv_uri: <url to custom image>
+
+    # Public image usage for iSCSI. BYOS example
+    iscsi_os_image: "SUSE:sles-sap-15-sp3-byos:gen2:latest"
+
+    # IP address of the iSCSI server. If it's not set the address will be auto generated from the provided vnet address range
+    iscsi_srv_ip: <ip_addr>
+    # Number of LUN (logical units) to serve with the iscsi server. Each LUN can be used as a unique sbd disk
+    iscsi_lun_count: <lun num>
+    # Disk size in GB used to create the LUNs and partitions to be served by the ISCSI service
+    iscsi_disk_size: <size in GB>
+
