@@ -4,9 +4,9 @@ venv/
 **/__pycache__/
 secret/
 inventory.yaml
-terraform/aws/.terraform
-terraform/aws/terraform.tfstate*
-terraform/aws/terraform.tfvars
+terraform/ec2/.terraform
+terraform/ec2/terraform.tfstate*
+terraform/ec2/terraform.tfvars
 terraform/azure/.terraform
 terraform/azure/terraform.tfstate*
 terraform/azure/terraform.tfvars
@@ -27,7 +27,7 @@ ansible/playbooks/destroy.sh
 ansible/playbooks/vars/azure_hana_media.yaml
 terraform/azure/.terraform.lock.hcl
 terraform/gcp/.terraform.lock.hcl
-terraform/aws/.terraform.lock.hcl
+terraform/ec2/.terraform.lock.hcl
 terraform/azure/inventory.yaml
 oldbuild.sh
 olddestroy.sh
